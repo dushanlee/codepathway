@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="CodePathway">
-<meta name="description" content="CodePathway is a complete self-paced software engineering learning system with 66 lessons, 458 skills, in-browser practice, schedule controls, undo history, progress tracking, and a full-stack upgrade path.">
+<meta name="description" content="CodePathway is a complete self-paced software engineering learning system with lessons, skills, in-browser practice, schedule controls, undo history, progress tracking, search, and a full-stack upgrade path.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CodePathway | Guided Software Engineering Roadmap</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a0a0c'/><text x='6' y='24' font-size='20' font-family='system-ui,sans-serif' font-weight='700' fill='%2348d597'>&lt;/&gt;</text></svg>">
@@ -39,6 +39,7 @@ body{font-family:'Inter Tight',sans-serif;background:var(--bg);color:var(--text)
 .pgbtn:hover{border-color:var(--text2);color:var(--text)}
 /* ── NAV BUTTON COLOR SYSTEM ── */
 /* Each page button carries two CSS vars: --nc (accent color) and --nb (tinted bg) */
+.pgbtn[data-page="home"]     {--nc:#e8b339;--nb:#241e06;--nc-l:#fef3c7}
 .pgbtn[data-page="daily"]    {--nc:#48d597;--nb:#08221a;--nc-l:#d1fae5}
 .pgbtn[data-page="roadmap"]  {--nc:#38bdf8;--nb:#071824;--nc-l:#dbeafe}
 .pgbtn[data-page="curriculum"]{--nc:#b794f6;--nb:#170f2e;--nc-l:#ede9fe}
@@ -991,26 +992,936 @@ button:disabled{cursor:not-allowed}
 .health-pill.ok{border-color:var(--green);color:var(--green);background:#08251a}
 .health-pill.warn{border-color:var(--gold);color:var(--gold);background:#241e06}
 .health-pill.bad{border-color:var(--red);color:var(--red);background:#28090c}
+
+/* ── COMMAND SEARCH UPGRADE ── */
+.search-key{font-family:'JetBrains Mono',monospace;font-size:10px;border:1px solid var(--border2);background:var(--bg);border-radius:5px;padding:1px 6px;color:var(--muted)}
+.srch-overlay{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);display:none;align-items:flex-start;justify-content:center;padding:72px 18px 24px}
+.srch-overlay.open{display:flex}
+.srch-box{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:720px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.srch-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.srch-icon{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--green);flex-shrink:0}
+.srch-input{flex:1;background:transparent;border:none;outline:none;font-family:'Inter Tight',sans-serif;font-size:15px;color:var(--text);min-width:0}
+.srch-close{font-family:'JetBrains Mono',monospace;font-size:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);border-radius:7px;padding:5px 8px;cursor:pointer}
+.srch-close:hover{color:var(--text);border-color:var(--text2)}
+.srch-filters{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.srch-filter{font-family:'JetBrains Mono',monospace;font-size:9.5px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);border-radius:999px;padding:6px 10px;cursor:pointer;transition:all .12s}
+.srch-filter:hover{border-color:var(--text2);color:var(--text)}
+.srch-filter.on{background:var(--green);border-color:var(--green);color:#04140d;font-weight:700}
+.srch-results{max-height:min(58vh,520px);overflow-y:auto}
+.srch-empty{padding:26px 18px;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.6}
+.srch-group-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 16px;position:sticky;top:0;z-index:1}
+.srch-result{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;display:block}
+.srch-result:hover,.srch-result.active{background:var(--surface2)}
+.srch-result:last-child{border-bottom:none}
+.srch-r-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.srch-r-n{font-size:13.5px;font-weight:700;color:var(--text)}
+.srch-r-ph{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--surface2)}
+.srch-r-kind{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.srch-r-done{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);font-weight:700}
+.srch-r-cur{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);font-weight:700;background:#241e06;padding:2px 5px;border-radius:4px}
+.srch-r-obj{font-size:11.5px;color:var(--text2);line-height:1.45}
+.srch-r-path{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:4px}
+.srch-footer{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--border);padding:8px 14px;background:var(--bg2);font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.srch-results mark{background:rgba(232,179,57,.32);color:inherit;border-radius:3px;padding:0 2px}
+body.light .srch-overlay{background:rgba(15,23,42,.32)}
+body.light .srch-filter.on{color:#052e16}
+body.light .search-key{background:#fff}
+@media(max-width:560px){
+  .srch-overlay{padding-top:56px}
+  .srch-box{border-radius:14px}
+  .srch-icon{display:none}
+  .srch-footer{justify-content:flex-start}
+}
+
+
+/* ── TOPBAR INTEGRATED SEARCH ── */
+.topbar{align-items:stretch}
+.topbar-main{display:flex;align-items:center;gap:14px;width:100%}
+.topbar-main .brand{display:flex;align-items:center}
+.topbar-main .pagenav{align-items:center}
+.top-searchbar{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1px solid var(--border2);
+  background:linear-gradient(180deg,var(--surface),var(--bg2));
+  color:var(--text2);
+  border-radius:12px;
+  padding:10px 13px;
+  cursor:pointer;
+  font-family:'Inter Tight',sans-serif;
+  text-align:left;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.top-searchbar:hover{
+  border-color:var(--green);
+  color:var(--text);
+  background:var(--surface2);
+}
+.top-searchbar:focus-visible{
+  outline:none;
+  border-color:var(--green);
+  box-shadow:0 0 0 2px rgba(72,213,151,.18);
+}
+.top-search-icon{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green);
+  flex-shrink:0;
+}
+.top-search-placeholder{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+  color:var(--text2);
+}
+.top-searchbar:hover .top-search-placeholder{color:var(--text)}
+.search-key{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  border:1px solid var(--border2);
+  background:var(--bg);
+  border-radius:5px;
+  padding:1px 6px;
+  color:var(--muted);
+  flex-shrink:0;
+}
+.search-toggle-btn{display:none!important}
+body.light .top-searchbar{background:#fff}
+body.light .search-key{background:#f8fafc}
+@media(max-width:560px){
+  .topbar-main{display:block}
+  .topbar-main .brand{width:100%;margin-bottom:8px}
+  .top-searchbar{padding:9px 11px;border-radius:10px}
+  .top-search-icon{display:none}
+  .top-search-placeholder{font-size:12.5px}
+}
+
+
+/* ── HOME PAGE ── */
+.brand-btn{
+  border:none;
+  background:transparent;
+  font-family:'Fraunces',serif;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--text);
+  cursor:pointer;
+  padding:7px 9px;
+  border-radius:10px;
+  white-space:nowrap;
+  transition:background .15s,color .15s,box-shadow .15s;
+}
+.brand-btn:hover,.brand-btn.active{
+  background:#241e06;
+  color:var(--gold);
+  box-shadow:inset 0 0 0 1px rgba(232,179,57,.45);
+}
+body.light .brand-btn:hover,body.light .brand-btn.active{
+  background:#fef3c7;
+  color:#111;
+  box-shadow:inset 0 0 0 1px rgba(232,179,57,.75);
+}
+.home-hero{
+  margin:18px 0 14px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(72,213,151,.13),transparent 38%),
+    radial-gradient(circle at 92% 12%,rgba(232,179,57,.12),transparent 42%),
+    linear-gradient(180deg,var(--surface),var(--bg2));
+  padding:26px;
+  overflow:hidden;
+  position:relative;
+}
+.home-kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin-bottom:9px;
+}
+.home-hero h1{
+  font-family:'Fraunces',serif;
+  font-size:clamp(30px,5vw,54px);
+  font-weight:650;
+  line-height:1;
+  letter-spacing:-.035em;
+  max-width:760px;
+  margin-bottom:12px;
+}
+.home-hero p{
+  color:var(--text2);
+  font-size:14.5px;
+  line-height:1.65;
+  max-width:690px;
+}
+.home-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.home-action{
+  border:none;
+  border-radius:12px;
+  padding:12px 16px;
+  font-family:'Inter Tight',sans-serif;
+  font-size:13.5px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .15s,filter .15s,border-color .15s,color .15s;
+}
+.home-action.primary{background:var(--green);color:#04140d}
+.home-action.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.home-action.secondary{background:var(--surface);color:var(--text2);border:1px solid var(--border2)}
+.home-action.secondary:hover{color:var(--text);border-color:var(--text2);transform:translateY(-1px)}
+.home-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin:14px 0}
+.home-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 1px 4px rgba(0,0,0,.24);
+}
+.home-card h2{
+  font-family:'Fraunces',serif;
+  font-size:20px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+.home-card p{font-size:12.5px;color:var(--text2);line-height:1.55}
+.home-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.home-stat{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:14px 12px;
+}
+.home-stat-num{
+  font-family:'Fraunces',serif;
+  font-size:28px;
+  font-weight:650;
+  line-height:1;
+}
+.home-stat-lbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:6px;
+}
+.home-path{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:13px;
+}
+.home-path-row{
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 13px;
+  cursor:pointer;
+  transition:transform .14s,border-color .14s,background .14s;
+}
+.home-path-row:hover{transform:translateX(2px);border-color:var(--green);background:var(--surface2)}
+.home-path-num{
+  width:26px;height:26px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  background:#08251a;color:var(--green);
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;
+  flex-shrink:0;
+}
+.home-path-title{font-size:13px;font-weight:800;margin-bottom:2px}
+.home-path-desc{font-size:11.5px;color:var(--muted);line-height:1.45}
+.home-phase-list{display:flex;flex-direction:column;gap:8px;margin-top:13px}
+.home-phase{
+  display:grid;
+  grid-template-columns:34px 1fr auto;
+  gap:10px;
+  align-items:center;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  transition:border-color .14s,transform .14s;
+}
+.home-phase:hover{border-color:var(--blue);transform:translateX(2px)}
+.home-phase-idx{font-family:'Fraunces',serif;font-size:22px;font-weight:650}
+.home-phase-name{font-size:12.5px;font-weight:800}
+.home-phase-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px}
+.home-phase-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)}
+.home-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.home-mini{
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:16px;
+  padding:16px;
+  cursor:pointer;
+  transition:transform .14s,border-color .14s;
+}
+.home-mini:hover{transform:translateY(-2px);border-color:var(--gold)}
+.home-mini-k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.home-mini-t{font-size:14px;font-weight:800;margin-bottom:5px}
+.home-mini-d{font-size:11.5px;color:var(--text2);line-height:1.5}
+@media(max-width:760px){
+  .home-grid{grid-template-columns:1fr}
+  .home-stat-grid{grid-template-columns:repeat(2,1fr)}
+  .home-mini-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .brand-btn{font-size:13px;width:100%;text-align:left}
+  .home-hero{padding:20px}
+}
+
+
+/* ── HOME PROOF SNAPSHOT ── */
+.home-proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.home-proof{
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:16px;
+  padding:16px;
+  transition:border-color .14s,transform .14s;
+}
+.home-proof:hover{border-color:var(--green);transform:translateY(-1px)}
+.home-proof-k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.home-proof-v{font-family:'Fraunces',serif;font-size:24px;font-weight:650;line-height:1.05;margin-bottom:5px}
+.home-proof-d{font-size:11.5px;color:var(--text2);line-height:1.5}
+@media(max-width:760px){.home-proof-grid{grid-template-columns:1fr}}
+
+
+/* ── TOPBAR CARD POLISH ── */
+.topbar{
+  top:10px;
+  margin:10px 0 16px;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(19,19,24,.88);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.topbar-main{
+  gap:12px;
+}
+.brand-btn{
+  font-size:20px;
+  padding:10px 14px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+}
+.pagenav{
+  gap:7px;
+}
+.pgbtn{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+}
+.top-searchbar{
+  min-height:42px;
+  border-radius:13px;
+}
+.home-current-label{
+  display:inline-flex;
+  align-items:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--green);
+  background:#08251a;
+  border:1px solid rgba(72,213,151,.25);
+  border-radius:999px;
+  padding:4px 9px;
+  margin-bottom:8px;
+}
+body.light .topbar{
+  background:rgba(255,255,255,.88);
+  box-shadow:0 1px 4px rgba(15,23,42,.08);
+}
+@media(max-width:560px){
+  .topbar{top:0;margin:0 0 14px;border-radius:0 0 16px 16px}
+  .brand-btn{font-size:17px;width:100%;justify-content:flex-start}
+}
+
+
+/* ── FINAL HEADER ALIGNMENT PATCH ── */
+.topbar{
+  top:8px;
+  margin:8px 0 16px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(19,19,24,.9);
+  box-shadow:0 1px 4px rgba(0,0,0,.28);
+  gap:12px;
+}
+.topbar-main{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+}
+.brand-btn{
+  font-size:17px;
+  line-height:1;
+  min-height:40px;
+  padding:8px 13px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--gold);
+  background:#241e06;
+  color:var(--gold);
+  box-shadow:none;
+}
+.brand-btn:hover,.brand-btn.active{
+  color:var(--gold);
+  background:#241e06;
+  box-shadow:none;
+}
+.pagenav{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+  flex:1;
+}
+.pgbtn{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 13px;
+}
+.theme-toggle-btn{
+  min-width:44px;
+  justify-content:center;
+}
+.top-searchbar{
+  width:100%;
+  min-height:42px;
+  border-radius:13px;
+  margin-top:0;
+  background:var(--surface);
+}
+.home-hero{
+  margin-top:16px;
+}
+body.light .topbar{
+  background:rgba(255,255,255,.9);
+  box-shadow:0 1px 4px rgba(15,23,42,.08);
+}
+body.light .brand-btn,
+body.light .brand-btn:hover,
+body.light .brand-btn.active{
+  background:#fef3c7;
+  border-color:var(--gold);
+  color:#111;
+}
+@media(max-width:760px){
+  .topbar-main{flex-wrap:wrap}
+  .brand-btn{width:auto}
+  .pagenav{justify-content:flex-start}
+}
+@media(max-width:560px){
+  .topbar{top:0;margin:0 0 14px;border-radius:0 0 16px 16px}
+  .brand-btn{font-size:16px;width:100%;justify-content:flex-start}
+}
+
+
+
+/* ── FINAL HEADER BALANCE PATCH ── */
+.topbar{
+  top:8px;
+  margin:8px 0 16px;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(19,19,24,.9);
+  box-shadow:0 1px 4px rgba(0,0,0,.28);
+  gap:12px;
+}
+.topbar-main{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:12px;
+  width:100%;
+}
+.brand-btn{
+  width:auto;
+  min-width:0;
+  min-height:40px;
+  padding:8px 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  line-height:1;
+  border:1px solid var(--gold);
+  background:#241e06;
+  color:var(--gold);
+  box-shadow:none;
+}
+.brand-btn:hover,.brand-btn.active{
+  background:#241e06;
+  color:var(--gold);
+  box-shadow:none;
+}
+.pagenav{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.pgbtn{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 13px;
+}
+.theme-toggle-btn{
+  width:44px;
+  min-width:44px;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+.top-searchbar{
+  min-height:42px;
+  border-radius:13px;
+  margin-top:0;
+  background:var(--surface);
+}
+.home-hero{
+  margin-top:16px;
+}
+body.light .topbar{
+  background:rgba(255,255,255,.9);
+  box-shadow:0 1px 4px rgba(15,23,42,.08);
+}
+body.light .brand-btn,
+body.light .brand-btn:hover,
+body.light .brand-btn.active{
+  background:#fef3c7;
+  border-color:var(--gold);
+  color:#111;
+}
+@media(max-width:760px){
+  .topbar-main{
+    grid-template-columns:1fr;
+  }
+  .brand-btn{
+    width:max-content;
+    max-width:100%;
+  }
+  .pagenav{
+    justify-content:flex-start;
+  }
+}
+@media(max-width:560px){
+  .topbar{
+    top:0;
+    margin:0 0 14px;
+    border-radius:0 0 16px 16px;
+  }
+  .brand-btn{
+    width:100%;
+    justify-content:flex-start;
+    font-size:16px;
+  }
+}
+
+
+
+/* ── AMBIENT DESKTOP BACKDROP ── */
+.ambient-stage{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+
+.ambient-stage::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(72,213,151,.13),transparent 24%),
+    radial-gradient(circle at 82% 18%,rgba(232,179,57,.12),transparent 26%),
+    radial-gradient(circle at 50% 80%,rgba(56,189,248,.06),transparent 24%);
+  opacity:.9;
+}
+
+.ambient-stage::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at center,transparent 0,rgba(0,0,0,.72) 42%,rgba(0,0,0,.9) 100%);
+  opacity:.18;
+}
+
+.side-orbit{
+  position:absolute;
+  top:118px;
+  bottom:32px;
+  width:180px;
+  opacity:.98;
+}
+
+.side-orbit.left{
+  right:calc(50% + 500px);
+}
+
+.side-orbit.right{
+  left:calc(50% + 500px);
+}
+
+.orbit-card{
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(19,19,24,.92),rgba(10,10,12,.72));
+  border-radius:18px;
+  padding:14px 15px;
+  box-shadow:0 18px 50px rgba(0,0,0,.25);
+  backdrop-filter:blur(14px);
+}
+
+.orbit-card.top{
+  margin-top:0;
+}
+
+.orbit-card.mid{
+  margin-top:28px;
+}
+
+.orbit-card.bottom{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+}
+
+.orbit-k{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+
+.orbit-v{
+  font-family:'Fraunces',serif;
+  font-size:24px;
+  font-weight:650;
+  line-height:1;
+}
+
+.orbit-d{
+  font-size:10.5px;
+  color:var(--text2);
+  line-height:1.45;
+  margin-top:6px;
+}
+
+.orbit-mini{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.orbit-dot{
+  height:7px;
+  border-radius:999px;
+  background:var(--border2);
+}
+
+.orbit-dot.on:nth-child(1){background:var(--green)}
+.orbit-dot.on:nth-child(2){background:var(--blue)}
+.orbit-dot.on:nth-child(3){background:var(--gold)}
+
+.orbit-path{
+  position:absolute;
+  top:160px;
+  bottom:120px;
+  width:2px;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:linear-gradient(180deg,transparent,rgba(72,213,151,.28),rgba(232,179,57,.25),transparent);
+  overflow:hidden;
+}
+
+.orbit-path::after{
+  content:'';
+  position:absolute;
+  left:-3px;
+  top:-20%;
+  width:8px;
+  height:80px;
+  border-radius:999px;
+  background:linear-gradient(180deg,transparent,var(--green),transparent);
+  animation:orbitScan 7s linear infinite;
+}
+
+@keyframes orbitScan{
+  from{transform:translateY(-80px)}
+  to{transform:translateY(calc(100vh - 40px))}
+}
+
+.orbit-label{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  writing-mode:vertical-rl;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.side-orbit.left .orbit-label{
+  left:10px;
+  transform:translateY(-50%) rotate(180deg);
+}
+
+.side-orbit.right .orbit-label{
+  right:10px;
+}
+
+.wrap{
+  position:relative;
+  z-index:1;
+}
+
+@media(max-width:1420px){
+  .side-orbit{display:none}
+  .ambient-stage::after{opacity:.1}
+}
+
+
+/* ── HOME DEPTH POLISH ── */
+.home-hero,
+.home-card,
+.psec,
+.home-mini{
+  box-shadow:0 18px 60px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.28);
+}
+.home-hero{
+  position:relative;
+}
+.home-hero::after{
+  content:'';
+  position:absolute;
+  right:26px;
+  top:24px;
+  width:80px;
+  height:80px;
+  border:1px solid rgba(232,179,57,.2);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(232,179,57,.08),transparent 60%);
+  opacity:.65;
+}
+@media(max-width:760px){
+  .home-hero::after{display:none}
+}
+
+
+/* ── FLOATING TECH WORD CLOUD ── */
+.tech-cloud{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.tech-word{
+  position:absolute;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text2);
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(19,19,24,.52);
+  border-radius:999px;
+  padding:5px 9px;
+  opacity:.54;
+  box-shadow:0 0 22px rgba(72,213,151,.05);
+  backdrop-filter:blur(8px);
+  animation:techFloat var(--dur,14s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+}
+
+.tech-word.green{color:var(--green);border-color:rgba(72,213,151,.18)}
+.tech-word.blue{color:var(--blue);border-color:rgba(56,189,248,.18)}
+.tech-word.gold{color:var(--gold);border-color:rgba(232,179,57,.18)}
+.tech-word.pink{color:var(--p5);border-color:rgba(244,114,182,.18)}
+.tech-word.purple{color:var(--p1);border-color:rgba(183,148,246,.18)}
+
+@keyframes techFloat{
+  0%,100%{transform:translate3d(0,0,0) rotate(var(--rot,0deg));opacity:.36}
+  35%{transform:translate3d(var(--x1,14px),var(--y1,-18px),0) rotate(calc(var(--rot,0deg) + 2deg));opacity:.72}
+  70%{transform:translate3d(var(--x2,-10px),var(--y2,18px),0) rotate(calc(var(--rot,0deg) - 2deg));opacity:.48}
+}
+
+.skill-constellation{
+  position:absolute;
+  left:50%;
+  top:52%;
+  width:120px;
+  height:120px;
+  transform:translate(-50%,-50%);
+  opacity:.65;
+}
+
+.skill-constellation::before,
+.skill-constellation::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:28px;
+  transform:rotate(45deg);
+}
+
+.skill-constellation::after{
+  inset:22px;
+  border-color:rgba(72,213,151,.16);
+  animation:constellationSpin 18s linear infinite;
+}
+
+@keyframes constellationSpin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+.const-dot{
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 18px rgba(72,213,151,.5);
+}
+
+.const-dot:nth-child(1){left:8px;top:24px;background:var(--green)}
+.const-dot:nth-child(2){right:10px;top:36px;background:var(--blue)}
+.const-dot:nth-child(3){left:42px;bottom:8px;background:var(--gold)}
+.const-dot:nth-child(4){right:34px;bottom:20px;background:var(--p5)}
+
+@media(max-width:1420px){
+  .tech-cloud,.skill-constellation{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .tech-word,.side-line::after,.orbit-path::after,.skill-constellation::after{animation:none}
+}
+
 </style>
 </head>
 <body>
-<div class="wrap" role="main">
-<div class="topbar" role="navigation" aria-label="Application navigation">
-  <div class="brand"><span style="font-style:italic">Code</span>Pathway</div>
-  <nav class="pagenav" aria-label="Main navigation">
-    <button class="pgbtn active" data-page="daily" aria-pressed="true" aria-label="Daily — what to study today">Daily</button>
-    <button class="pgbtn" data-page="roadmap" aria-pressed="false">Roadmap</button>
-    <button class="pgbtn" data-page="curriculum" aria-pressed="false">Curriculum</button>
-    <button class="pgbtn" data-page="checklist" aria-pressed="false">Checklist</button>
-    <button class="pgbtn" data-page="practice" aria-pressed="false">Practice</button>
-    <button class="pgbtn" data-page="tracker" aria-pressed="false">Tracker</button>
-    <button class="pgbtn" data-page="help" aria-pressed="false" aria-label="Help &amp; guide (press ?)">Help</button>
-    <button class="pgbtn theme-toggle-btn" id="theme-toggle" title="Toggle light/dark mode">☀️</button>
-  </nav>
+
+
+<div class="ambient-stage" aria-hidden="true">
+  <div class="side-orbit left">
+
+    <div class="tech-cloud">
+      <span class="tech-word green" style="left:10px;top:138px;--dur:13s;--delay:-2s;--x1:18px;--y1:-20px;--x2:-8px;--y2:16px">React</span>
+      <span class="tech-word blue" style="left:58px;top:228px;--dur:16s;--delay:-8s;--x1:-16px;--y1:-14px;--x2:12px;--y2:22px">Python</span>
+      <span class="tech-word gold" style="left:0;top:338px;--dur:15s;--delay:-5s;--x1:20px;--y1:12px;--x2:-12px;--y2:-18px">SQL</span>
+      <span class="tech-word purple" style="left:62px;top:456px;--dur:18s;--delay:-11s;--x1:-18px;--y1:18px;--x2:12px;--y2:-16px">APIs</span>
+      <span class="tech-word pink" style="left:8px;top:574px;--dur:17s;--delay:-7s;--x1:16px;--y1:-18px;--x2:-10px;--y2:18px">Docker</span>
+    </div>
+    <div class="skill-constellation"><i class="const-dot"></i><i class="const-dot"></i><i class="const-dot"></i><i class="const-dot"></i></div>
+    <div class="orbit-card top">
+      <div class="orbit-k">Pathway</div>
+      <div class="orbit-v cP2">Build</div>
+      <div class="orbit-d">Daily lessons become React, Python, SQL, projects, notes, and interview proof.</div>
+      <div class="orbit-mini"><i class="orbit-dot on"></i><i class="orbit-dot on"></i><i class="orbit-dot"></i></div>
+    </div>
+    <div class="orbit-path"></div>
+    <div class="orbit-label">Learn → Build → Ship</div>
+    <div class="orbit-card bottom">
+      <div class="orbit-k">Momentum</div>
+      <div class="orbit-v cP4">Focus</div>
+      <div class="orbit-d">Small consistent sessions beat random marathon studying.</div>
+    </div>
+  </div>
+
+  <div class="side-orbit right">
+
+    <div class="tech-cloud">
+      <span class="tech-word gold" style="right:14px;top:146px;--dur:14s;--delay:-4s;--x1:-16px;--y1:-18px;--x2:10px;--y2:16px">JavaScript</span>
+      <span class="tech-word blue" style="right:50px;top:256px;--dur:17s;--delay:-9s;--x1:18px;--y1:16px;--x2:-14px;--y2:-20px">TypeScript</span>
+      <span class="tech-word green" style="right:6px;top:376px;--dur:15s;--delay:-6s;--x1:-18px;--y1:18px;--x2:12px;--y2:-14px">FastAPI</span>
+      <span class="tech-word purple" style="right:58px;top:492px;--dur:18s;--delay:-12s;--x1:16px;--y1:-16px;--x2:-10px;--y2:18px">Postgres</span>
+      <span class="tech-word pink" style="right:10px;top:610px;--dur:16s;--delay:-3s;--x1:-14px;--y1:-18px;--x2:16px;--y2:14px">System Design</span>
+    </div>
+    <div class="skill-constellation"><i class="const-dot"></i><i class="const-dot"></i><i class="const-dot"></i><i class="const-dot"></i></div>
+    <div class="orbit-card top">
+      <div class="orbit-k">Output</div>
+      <div class="orbit-v cP6">Proof</div>
+      <div class="orbit-d">Track DSA, full-stack systems, projects, and portfolio evidence.</div>
+      <div class="orbit-mini"><i class="orbit-dot on"></i><i class="orbit-dot"></i><i class="orbit-dot on"></i></div>
+    </div>
+    <div class="orbit-path"></div>
+    <div class="orbit-label">CodePathway OS</div>
+    <div class="orbit-card bottom">
+      <div class="orbit-k">Goal</div>
+      <div class="orbit-v cP5">Hire</div>
+      <div class="orbit-d">Turn learning into visible job-ready signals.</div>
+    </div>
+  </div>
 </div>
 
+<div class="wrap" role="main">
+<div class="topbar" role="navigation" aria-label="Application navigation">
+  <div class="topbar-main">
+    <button class="brand brand-btn active" id="brand-home" data-page="home" type="button" aria-label="Go to CodePathway home" title="Go to Home"><span style="font-style:italic">Code</span>Pathway</button>
+    <nav class="pagenav" aria-label="Main navigation">
+      <button class="pgbtn" data-page="daily" aria-pressed="false" aria-label="Daily — what to study today">Daily</button>
+      <button class="pgbtn" data-page="roadmap" aria-pressed="false">Roadmap</button>
+      <button class="pgbtn" data-page="curriculum" aria-pressed="false">Curriculum</button>
+      <button class="pgbtn" data-page="checklist" aria-pressed="false">Checklist</button>
+      <button class="pgbtn" data-page="practice" aria-pressed="false">Practice</button>
+      <button class="pgbtn" data-page="tracker" aria-pressed="false">Tracker</button>
+      <button class="pgbtn" data-page="help" aria-pressed="false" aria-label="Help &amp; guide (press ?)">Help</button>
+      <button class="pgbtn theme-toggle-btn" id="theme-toggle" title="Toggle light/dark mode">☀️</button>
+    </nav>
+  </div>
+  <button class="top-searchbar" id="search-btn" type="button" title="Search lessons, skills, practice, resources, pages, and actions. Shortcut: /" aria-label="Search CodePathway">
+    <span class="top-search-icon">Search</span>
+    <span class="top-search-placeholder">Search lessons, skills, practice, resources, pages…</span>
+    <span class="search-key">/</span>
+  </button>
+</div>
+
+<!-- ════════ PAGE 0: HOME ════════ -->
+<section class="page active" id="page-home"></section>
+
 <!-- ════════ PAGE 1: DAILY ════════ -->
-<section class="page active" id="page-daily">
+<section class="page" id="page-daily">
   <div class="today-brief" id="today-brief" title="Click to open today's lesson">
     <div class="tb-date" id="tb-date">Loading…</div>
     <div class="tb-main">
@@ -1054,18 +1965,29 @@ button:disabled{cursor:not-allowed}
 <!-- ════════ PAGE 6: TRACKER ════════ -->
 <section class="page" id="page-tracker"></section>
 
-<!-- ════════ PAGE 7: HELP ════════ -->
+<!-- ════════ PAGE 8: HELP ════════ -->
 <section class="page" id="page-help"></section>
 
-<div class="footer" id="app-footer">CodePathway Final Complete · 7 pages · 66 lessons · 458 skills · ~28 weeks<br>Progress saved in browser · <span class="reset-link" id="reset">reset everything</span> · Press <kbd style="font-family:inherit;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:1px 4px">?</kbd> for help</div>
+<div class="footer" id="app-footer">CodePathway Final Complete · loading stats…<br>Progress saved in browser · <span class="reset-link" id="reset">reset everything</span> · Press <kbd style="font-family:inherit;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:1px 4px">/</kbd> to search · Press <kbd style="font-family:inherit;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:1px 4px">?</kbd> for help</div>
 <!-- Search overlay (hidden by default) -->
-<div class="srch-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="Lesson search">
+<div class="srch-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="CodePathway search">
   <div class="srch-box">
     <div class="srch-header">
-      <div class="srch-icon" aria-hidden="true">🔍</div>
-      <input class="srch-input" id="srch-input" role="searchbox" aria-label="Search lessons, objectives, and topics" placeholder="Search lessons, objectives, topics… (/ to open, Esc to close)" autocomplete="off" spellcheck="false"/>
+      <div class="srch-icon" aria-hidden="true">Search</div>
+      <input class="srch-input" id="srch-input" role="searchbox" aria-label="Search lessons, skills, practice, resources, pages, and actions" placeholder="Search lessons, skills, practice, resources, pages… (/ to open, Esc to close)" autocomplete="off" spellcheck="false"/>
+      <button class="srch-close" id="srch-close" type="button" aria-label="Close search">Esc</button>
     </div>
-    <div class="srch-results" id="srch-results"><div class="srch-empty" id="srch-empty-init">Type to search lessons…</div></div>
+    <div class="srch-filters" role="toolbar" aria-label="Search filters">
+      <button class="srch-filter on" data-sfilter="all" type="button">All</button>
+      <button class="srch-filter" data-sfilter="lesson" type="button">Lessons</button>
+      <button class="srch-filter" data-sfilter="skill" type="button">Skills</button>
+      <button class="srch-filter" data-sfilter="practice" type="button">Practice</button>
+      <button class="srch-filter" data-sfilter="resource" type="button">Resources</button>
+      <button class="srch-filter" data-sfilter="page" type="button">Pages</button>
+      <button class="srch-filter" data-sfilter="action" type="button">Actions</button>
+    </div>
+    <div class="srch-results" id="srch-results"><div class="srch-empty" id="srch-empty-init">Type to search the app…</div></div>
+    <div class="srch-footer"><span>Enter opens the first result</span><span>Esc closes</span><span>/ opens search</span></div>
   </div>
 </div>
 </div>
@@ -1207,7 +2129,7 @@ const KEY='swe_elite_v1'; // localStorage key — keep stable so user progress s
 const APP_VERSION='final-complete';
 // Compute today's date string (YYYY-MM-DD) without depending on ymd() which is defined later
 const DEFAULT_START=(()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})();
-let state={appVersion:APP_VERSION,updatedAt:null,start:DEFAULT_START,restDow:0,order:LESSONS.map(l=>l.id),extra:{},done:{},doneDate:{},skipped:{},tasks:{},obj:{},notes:{},mode:'full',focusSessions:0,seenAch:[],playground:{},projects:[],dsaLog:[],stars:[],sysDesigns:{},focusHistory:[],lastExport:null,theme:'dark',targetFinish:null,pracTab:'playground',pgEnv:null};
+let state={appVersion:APP_VERSION,updatedAt:null,start:DEFAULT_START,restDow:0,restDows:[0],order:LESSONS.map(l=>l.id),extra:{},done:{},doneDate:{},skipped:{},tasks:{},obj:{},notes:{},mode:'full',focusSessions:0,seenAch:[],playground:{},projects:[],dsaLog:[],stars:[],sysDesigns:{},focusHistory:[],lastExport:null,theme:'dark',targetFinish:null,pracTab:'playground',pgEnv:null};
 try{
   const raw=localStorage.getItem(KEY);
   if(raw){const s=JSON.parse(raw);if(s&&typeof s==='object')state={...state,...s};}
@@ -1223,7 +2145,14 @@ try{
   Object.entries(objDefaults).forEach(([k,v])=>{if(!state[k]||typeof state[k]!==typeof v||Array.isArray(state[k]))state[k]=v;});
   const arrDefaults={projects:[],dsaLog:[],stars:[],focusHistory:[],seenAch:[],undoStack:[]};
   Object.entries(arrDefaults).forEach(([k,v])=>{if(!Array.isArray(state[k]))state[k]=v;});
-  if(!Number.isInteger(state.restDow)||state.restDow<0||state.restDow>6)state.restDow=0;
+  if(!Array.isArray(state.restDows)){
+    if(Number.isInteger(state.restDow)&&state.restDow>=0&&state.restDow<=6)state.restDows=[state.restDow];
+    else state.restDows=[0];
+  }
+  state.restDows=[...new Set(state.restDows.map(Number).filter(d=>Number.isInteger(d)&&d>=0&&d<=6))].sort((a,b)=>a-b);
+  // Keep the plan schedulable: zero rest days is allowed, but all seven days off would leave no study days.
+  if(state.restDows.length>=7)state.restDows=[0];
+  if(!Number.isInteger(state.restDow)||state.restDow<0||state.restDow>6)state.restDow=state.restDows[0]??0;
   if(!state.start||!/^\d{4}-\d{2}-\d{2}$/.test(state.start))state.start=DEFAULT_START;
   if(!state.mode)state.mode='full';
   if(!state.pracTab)state.pracTab='playground';
@@ -1235,7 +2164,7 @@ function cloneData(v){
   return JSON.parse(JSON.stringify(v));
 }
 const UNDO_OBJECT_KEYS=['extra','order','skipped','done','doneDate','tasks','obj','notes','playground','projects','dsaLog','stars','sysDesigns','focusHistory','seenAch'];
-const UNDO_VALUE_KEYS=['start','restDow','targetFinish','mode','pracTab','pgEnv','focusSessions','lastExport','theme','appVersion'];
+const UNDO_VALUE_KEYS=['start','restDow','restDows','targetFinish','mode','pracTab','pgEnv','focusSessions','lastExport','theme','appVersion'];
 /** Persists full state to localStorage. Throws a toast if quota is exceeded. */
 function save(){try{state.appVersion=APP_VERSION;state.updatedAt=new Date().toISOString();state.undoStack=undoStack;localStorage.setItem(KEY,JSON.stringify(state));}catch(e){if(e.name==='QuotaExceededError'||e.code===22)toast('\u26A0 Storage full \u2014 export a backup then clear old notes to free space.',5000);}}
 const L_BY_ID={};LESSONS.forEach(l=>L_BY_ID[l.id]=l);
@@ -1245,18 +2174,33 @@ const MS=86400000;
 function parseD(s){return new Date(s+'T00:00:00');}
 function today0(){const d=new Date();d.setHours(0,0,0,0);return d;}
 function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function buildStudyDates(n){const out=[];let d=parseD(state.start);let g=0;while(out.length<n&&g<3000){if(d.getDay()!==state.restDow)out.push(new Date(d));d=new Date(d.getTime()+MS);g++;}return out;}
+function restSet(){return new Set(Array.isArray(state.restDows)?state.restDows:[state.restDow].filter(d=>Number.isInteger(d)));}
+function isRestDay(d){return restSet().has(d.getDay());}
+function restDayLabel(){
+  const names=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const r=[...restSet()].sort((a,b)=>a-b);
+  if(!r.length)return'No rest days';
+  return r.map(i=>names[i]).join(', ');
+}
+function buildStudyDates(n){const out=[];let d=parseD(state.start);let g=0;while(out.length<n&&g<3000){if(!isRestDay(d))out.push(new Date(d));d=new Date(d.getTime()+MS);g++;}return out;}
 function fmtD(d){return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+function fmtDY(d){return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
 function fmtFull(d){return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});}
+function plural(n,word){return n+' '+word+(n===1?'':'s');}
+function targetStudyDaysLabel(){
+  if(!state.targetFinish)return'';
+  const days=studyDaysUntil(parseD(state.targetFinish));
+  return days+'d from '+fmtDY(parseD(state.start))+' to '+fmtDY(parseD(state.targetFinish));
+}
 
 // ════════ SCHEDULER ════════
-// Count study days from state.start through targetDate (inclusive), skipping rest day
+// Count days from state.start through targetDate (inclusive), skipping selected rest days
 function studyDaysUntil(targetDate){
   const startD=parseD(state.start);if(targetDate<startD)return 0;
   let count=0,d=new Date(startD);
   const cap=new Date(startD.getTime()+3650*MS); // 10-year safety cap
   const end=targetDate<cap?targetDate:cap;
-  while(d<=end){if(d.getDay()!==state.restDow)count++;d=new Date(d.getTime()+MS);}
+  while(d<=end){if(!isRestDay(d))count++;d=new Date(d.getTime()+MS);}
   return count;
 }
 
@@ -1272,7 +2216,7 @@ function schedule(){
   let stretch=1;
   if(state.targetFinish){
     const targetD=parseD(state.targetFinish);
-    const available=studyDaysUntil(targetD); // total study days start→target
+    const available=studyDaysUntil(targetD); // total days from start → target
     let doneDays=0,naturalRemaining=0,remainingCount=0;
     state.order.forEach(id=>{
       const s=natSpan(id);
@@ -1317,7 +2261,20 @@ function tasksFor(l){const ph=l.ph,t=[];
 
 // ════════ STREAK ════════
 /** Counts consecutive days ending today (or yesterday) with at least one lesson completed. */
-function recomputeStreak(){const dates=Object.values(state.doneDate);if(!dates.length)return 0;const set=new Set(dates);let streak=0;let d=today0();if(!set.has(ymd(d)))d=new Date(d.getTime()-MS);let g=0;while(set.has(ymd(d))&&g<2000){streak++;d=new Date(d.getTime()-MS);g++;}return streak;}
+function recomputeStreak(){
+  const dates=Object.values(state.doneDate);if(!dates.length)return 0;
+  const set=new Set(dates);let streak=0;let d=today0();let g=0;
+  // Rest days do not require a completed lesson and should not break the streak.
+  while(isRestDay(d)&&g<14){d=new Date(d.getTime()-MS);g++;}
+  if(!set.has(ymd(d))){d=new Date(d.getTime()-MS);while(isRestDay(d)&&g<30){d=new Date(d.getTime()-MS);g++;}}
+  g=0;
+  while(g<2000){
+    if(isRestDay(d)){d=new Date(d.getTime()-MS);g++;continue;}
+    if(!set.has(ymd(d)))break;
+    streak++;d=new Date(d.getTime()-MS);g++;
+  }
+  return streak;
+}
 
 // ════════ ACTIONS ════════
 // ════════ UNDO STACK ════════
@@ -1380,7 +2337,7 @@ function renderToday(){
     if(!cur){el.innerHTML=`<div class="today-wrap"><div class="restday"><div class="rd-emoji">🎓</div><h2>All ${LESSONS.length} lessons complete</h2><p>Every lesson is marked done. Next: check the Roadmap for interview-prep timing, do daily LeetCode and start applying. If you want to review a lesson, use the \u2039 Prev / Next \u203A navigation below.</p></div><div class="lessnav"><button class="ln-btn" id="ln-prev-done" disabled>\u2039 Prev</button><div class="ln-pos">all done</div><button class="ln-btn" id="ln-next-done">Browse lessons \u203A</button></div></div>`;const nd=document.getElementById('ln-next-done');if(nd)nd.onclick=()=>{viewId=state.order[state.order.length-1];renderToday();};return;}
     const start=parseD(state.start);
     if(today0().getTime()<start.getTime()){const days=Math.ceil((start-today0())/MS);const isNew=doneCount()===0;el.innerHTML=`<div class="today-wrap"><div class="restday"><h2>${isNew?'👋 Welcome — plan not started yet':'Plan starts '+fmtFull(start)}</h2><p>${isNew?'Your start date is set to <b>'+fmtFull(start)+'</b> ('+days+' day'+(days>1?'s':'')+' from now). Use <b>Next \u203A</b> to browse the lessons, or go to <b>Daily \u2192 Schedule \u2192 Settings</b> to change your start date. Need help? Press <b>?</b> or open the <b>Help</b> page.':'<b>'+days+' day'+(days>1?'s':'')+' until day one.</b> Use Next \u203A to preview lessons. Change the start date in Schedule \u2192 Settings if needed.'}</p></div><div class="lessnav"><button class="ln-btn" disabled>\u2039 Prev</button><div class="ln-pos">preview the plan</div><button class="ln-btn" id="ln-next">Next \u203A</button></div></div>`;const nx=document.getElementById('ln-next');if(nx)nx.onclick=()=>{viewId=state.order[0];renderToday();};return;}
-    if(today0().getDay()===state.restDow){const nextL=L_BY_ID[cur];el.innerHTML=`<div class="today-wrap"><div class="restday"><div class="rd-emoji">☕</div><h2>Rest day (no lesson scheduled)</h2><p>Today is your scheduled day off, so nothing is due. Next up when you return: <b>${nextL.n}</b> (Phase ${nextL.ph}). You can preview it now or change your rest day in Calendar \u2192 settings.</p></div><div class="lessnav"><button class="ln-btn" disabled>\u2039 Prev</button><div class="ln-pos">rest day</div><button class="ln-btn" id="ln-next2">Preview next lesson \u203A</button></div></div>`;const nx=document.getElementById('ln-next2');if(nx)nx.onclick=()=>{viewId=cur||state.order[0];renderToday();};return;}
+    if(isRestDay(today0())){const nextL=L_BY_ID[cur];el.innerHTML=`<div class="today-wrap"><div class="restday"><div class="rd-emoji">☕</div><h2>Rest day (no lesson scheduled)</h2><p>Today is your scheduled day off, so nothing is due. Next up when you return: <b>${nextL.n}</b> (Phase ${nextL.ph}). You can preview it now or change your rest days in Calendar \u2192 settings.</p></div><div class="lessnav"><button class="ln-btn" disabled>\u2039 Prev</button><div class="ln-pos">rest day</div><button class="ln-btn" id="ln-next2">Preview next lesson \u203A</button></div></div>`;const nx=document.getElementById('ln-next2');if(nx)nx.onclick=()=>{viewId=cur||state.order[0];renderToday();};return;}
   }
   // target lesson = preview id if set, else current
   const targetId = (viewId!==null) ? viewId : cur;
@@ -1569,11 +2526,11 @@ function openScheduleSettingsModal(){
     </div>
 
     <div class="sched-field">
-      <div class="sched-field-lbl">Rest day <span style="font-size:10px;color:var(--muted);font-weight:400">&nbsp;\u2014 no lesson scheduled</span></div>
+      <div class="sched-field-lbl">Rest days <span style="font-size:10px;color:var(--muted);font-weight:400">&nbsp;\u2014 no lessons scheduled</span></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${days.map((d,i)=>`<span class="set-day ${state.restDow===i?'on':''}" data-smr="${i}">${d}</span>`).join('')}
+        ${days.map((d,i)=>`<span class="set-day ${restSet().has(i)?'on':''}" data-smr="${i}" role="button" aria-pressed="${restSet().has(i)?'true':'false'}" tabindex="0">${d}</span>`).join('')}
       </div>
-      <div class="sched-field-hint">One day off per week. Affects all date calculations.</div>
+      <div class="sched-field-hint">Toggle any days off per week. Select none, one, or multiple rest days. Affects all date calculations. Keep at least one study day available.</div>
     </div>
 
     <div class="sched-field">
@@ -1583,7 +2540,7 @@ function openScheduleSettingsModal(){
         <button class="pick-btn" id="sm-tp">Pick date</button>
         <button class="pick-btn" id="sm-tc" style="border-color:var(--red);color:var(--red);${state.targetFinish?'':'display:none'}">Clear</button>
       </div>
-      <div class="sched-field-hint ${state.targetFinish?'active':''}" id="sm-th">${state.targetFinish?'Active \u2014 remaining lessons rescaled to hit this date.':'Set a deadline and every remaining lesson rescales to fit automatically.'}</div>
+      <div class="sched-field-hint ${state.targetFinish?'active':''}" id="sm-th">${state.targetFinish?'Active — '+targetStudyDaysLabel()+'. Remaining lessons rescale to fit.':'Set a deadline and every remaining lesson rescales to fit automatically.'}</div>
     </div>
 
     <div class="modal-btns"><button class="btn btn-primary" id="sm-done">Done</button></div>
@@ -1597,14 +2554,33 @@ function openScheduleSettingsModal(){
     // ── Start date ──
     const si=mc.querySelector('#sm-start');
     si.onclick=()=>{try{si.showPicker();}catch(e){}};
-    si.onchange=()=>{if(si.value){state.start=si.value;save();renderAll();}};
+    si.onchange=()=>{if(si.value){state.start=si.value;save();renderAll();if(state.targetFinish){th.textContent='Active — '+targetStudyDaysLabel()+'. Remaining lessons rescale to fit.';th.className='sched-field-hint active';}}};
     mc.querySelector('#sm-sp').onclick=()=>{si.focus();try{si.showPicker();}catch(e){}};
 
-    // ── Rest day ──
-    mc.querySelectorAll('[data-smr]').forEach(btn=>{btn.onclick=()=>{
-      state.restDow=+btn.dataset.smr;save();renderAll();
-      mc.querySelectorAll('[data-smr]').forEach(b=>b.classList.toggle('on',+b.dataset.smr===state.restDow));
-    };});
+    // ── Rest days ──
+    const refreshRestButtons=()=>{
+      const current=restSet();
+      mc.querySelectorAll('[data-smr]').forEach(b=>{
+        const on=current.has(+b.dataset.smr);
+        b.classList.toggle('on',on);
+        b.setAttribute('aria-pressed',on?'true':'false');
+      });
+      if(state.targetFinish){th.textContent='Active — '+targetStudyDaysLabel()+'. Remaining lessons rescale to fit.';}
+    };
+    mc.querySelectorAll('[data-smr]').forEach(btn=>{
+      const toggleRest=()=>{
+        const day=+btn.dataset.smr;
+        const current=restSet();
+        if(current.has(day))current.delete(day);
+        else current.add(day);
+        if(current.size>=7){toast('Keep at least one study day available each week.',3000);return;}
+        state.restDows=[...current].sort((a,b)=>a-b);
+        state.restDow=state.restDows[0]??0; // legacy backup field
+        save();renderAll();refreshRestButtons();
+      };
+      btn.onclick=toggleRest;
+      btn.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleRest();}};
+    });
 
     // ── Target finish ──
     const ti=mc.querySelector('#sm-target');
@@ -1624,7 +2600,7 @@ function openScheduleSettingsModal(){
       state.targetFinish=ti.value||null;save();renderAll();
       ti.style.borderColor=state.targetFinish?'var(--blue)':'';
       tc.style.display=state.targetFinish?'':'none';
-      th.textContent=state.targetFinish?'Active \u2014 remaining lessons rescaled to hit this date.':'Set a deadline and every remaining lesson rescales to fit automatically.';
+      th.textContent=state.targetFinish?'Active — '+targetStudyDaysLabel()+'. Remaining lessons rescale to fit.':'Set a deadline and every remaining lesson rescales to fit automatically.';
       th.className='sched-field-hint'+(state.targetFinish?' active':'');
     };
     mc.querySelector('#sm-tp').onclick=()=>{ti.focus();try{ti.showPicker();}catch(e){}};
@@ -1637,7 +2613,7 @@ function renderCalendar(){
   const cur=currentLessonId();
   const overdue=overdueLessons(sc,tIdx);
   const behindDays=cur?Math.max(0,tIdx-sc.byId[cur].endIdx):0;
-  const planActive=cur&&today0()>=parseD(state.start)&&today0().getDay()!==state.restDow;
+  const planActive=cur&&today0()>=parseD(state.start)&&!isRestDay(today0());
 
   // ── Schedule health banner (only when behind or overdue) ──
   let healthHTML='';
@@ -1661,12 +2637,12 @@ function renderCalendar(){
   }
 
   let html=`<div class="cal-head"><h2>Schedule &amp; reorder</h2><input class="cal-search" id="cal-search" autocomplete="off" placeholder="search lessons\u2026" value="${calSearch}">
-    <button class="set-btn" id="sched-sett-btn" title="Change start date, rest day, target finish">Settings</button>
+    <button class="set-btn" id="sched-sett-btn" title="Change start date, rest days, target finish">Settings</button>
     <button class="set-btn undo-btn" id="undo-btn" ${undoStack.length?'':'disabled'} title="${undoStack.length?'Undo: '+undoStack[undoStack.length-1].label:'Nothing to undo'}">\u21B6 Undo${undoStack.length?' ('+undoStack.length+')':''}</button>
     <div class="cal-legend"><span><span class="lg-dot" style="background:var(--green)"></span>done</span><span><span class="lg-dot" style="background:var(--gold)"></span>current</span><span><span class="lg-dot" style="background:var(--red)"></span>behind</span><span><span class="lg-dot" style="background:var(--text2);opacity:.5"></span>skipped</span><span><span class="lg-dot" style="background:var(--dim)"></span>upcoming</span></div></div>
     ${healthHTML}
     <div class="howto-cal"><b>Your living calendar.</b> Each lesson gets more or fewer days based on difficulty. Click any lesson to see why it\u2019s there, exactly what to learn, give it more/less time, move it, skip it, or reset it. Every change is undoable.
-    <div class="hc-row"><span>\u2195 reorder</span><span>\u23F0 +1/+3/+7 days</span><span>\u21B7 skip</span><span>\u21BA reset</span><span>\u21B6 undo</span></div></div>`;
+    <div class="hc-row"><span>\u2195 reorder</span><span>\u23F0 +1/+3/+7 days</span><span>\u21B7 skip</span><span>\u21BA reset</span><span>\u21B6 undo</span><span>Rest: ${restDayLabel()}</span></div></div>`;
   let lastPhase=0;const q=calSearch.toLowerCase();
   state.order.forEach(id=>{
     const l=L_BY_ID[id];const s=sc.byId[id];const st=lessonStatus(id,sc,tIdx);
@@ -1704,7 +2680,7 @@ function renderCalendar(){
       </div></div>`;
   });
   const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  html+=`<div class="settings"><b>Backup &amp; restore</b>
+  html+=`<div class="settings" id="backup-tools"><b>Backup &amp; restore</b>
     <div class="set-row" style="margin-top:8px">Backup: <button class="set-btn" id="export-btn">\u2B07 Export progress</button><button class="set-btn" id="import-btn">\u2B06 Import progress</button><input type="file" id="import-file" accept="application/json" style="display:none"></div>
     <div class="set-row" style="margin-top:10px">Reset: <button class="set-btn" id="reset-sched-btn" style="border-color:var(--gold);color:var(--gold)">\u21BA Reset schedule to original</button><span style="font-size:10.5px;color:var(--muted)">restores original order &amp; clears extra days / skips. Keeps your completions and notes.</span></div>
     <div style="font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5">Progress lives in this browser. Export a backup file every few weeks so months of work are never lost.</div>
@@ -1793,6 +2769,128 @@ function checkAchievements(){
   state.seenAch=[...seen];save();
 }
 
+
+// ════════ HOME PAGE ════════
+function renderHome(){
+  const el=document.getElementById('page-home');if(!el)return;
+  const sc=schedule();
+  const cur=currentLessonId();
+  const dc=doneCount();
+  const pct=Math.round(dc/LESSONS.length*100);
+  const streak=recomputeStreak();
+  const totalSkills=LESSONS.reduce((a,l)=>a+l.obj.length,0);
+  let skillsDone=0;LESSONS.forEach(l=>(l.obj||[]).forEach((_,i)=>{if(state.obj[objKey(l.id,i)])skillsDone++;}));
+  const skippedCount=Object.keys(state.skipped||{}).filter(k=>state.skipped[k]).length;
+  const targetText=state.targetFinish?fmtDY(parseD(state.targetFinish)):(sc.finishDate?fmtDY(sc.finishDate):'Not scheduled');
+  const currentLesson=cur?L_BY_ID[cur]:null;
+  const currentSchedule=cur&&sc.byId[cur]?sc.byId[cur]:null;
+  const ctaTitle=currentLesson?'Current lesson':'Plan complete';
+  const ctaDesc=currentLesson&&currentSchedule
+    ? `${currentLesson.n} · due ${fmtD(currentSchedule.endDate)} · ${currentLesson.diff}`
+    : `All ${LESSONS.length} lessons are marked complete.`;
+  const projectCount=Array.isArray(state.projects)?state.projects.length:0;
+  const dsaCount=Array.isArray(state.dsaLog)?state.dsaLog.length:0;
+  const focusCount=Array.isArray(state.focusHistory)?state.focusHistory.length:(state.focusSessions||0);
+  const phaseRows=Object.keys(PHASE).map(k=>{
+    const pid=Number(k);
+    const p=PHASE[k];
+    const lessons=LESSONS.filter(l=>l.ph===pid);
+    const done=lessons.filter(l=>state.done[l.id]).length;
+    const pp=lessons.length?Math.round(done/lessons.length*100):0;
+    return `<div class="home-phase" data-home-phase="${pid}" role="button" tabindex="0" aria-label="Open Phase ${pid}: ${p.n}">
+      <div class="home-phase-idx c${p.c}">${pid}</div>
+      <div><div class="home-phase-name">${p.n}</div><div class="home-phase-meta">${done}/${lessons.length} lessons · ${p.ship||'foundation'}</div></div>
+      <div class="home-phase-pct">${pp}%</div>
+    </div>`;
+  }).join('');
+  el.innerHTML=`
+    <div class="home-hero">
+      <div class="home-kicker">Your software engineering command center</div>
+      <h1>Learn the path, track the work, and always know what to do next.</h1>
+      <p>CodePathway is not just a curriculum. It is a self-paced operating system for becoming a stronger software engineer: daily lessons, skill checklists, practice prompts, project milestones, scheduling, notes, and progress recovery in one place.</p>
+      <div class="home-actions">
+        <button class="home-action secondary" data-home-go="settings">Adjust schedule</button>
+      </div>
+    </div>
+
+    <div class="home-grid">
+      <div class="home-card">
+        <h2>Today’s mission</h2>
+        <div class="home-current-label">${ctaTitle}</div>
+        <p>${escHtml(ctaDesc)}</p>
+        <div class="home-stat-grid">
+          <div class="home-stat"><div class="home-stat-num cP2">${pct}%</div><div class="home-stat-lbl">Complete</div></div>
+          <div class="home-stat"><div class="home-stat-num cP6">${streak}</div><div class="home-stat-lbl">Streak</div></div>
+          <div class="home-stat"><div class="home-stat-num cP4">${skillsDone}</div><div class="home-stat-lbl">Skills done</div></div>
+          <div class="home-stat"><div class="home-stat-num cP5">${skippedCount}</div><div class="home-stat-lbl">Skipped</div></div>
+        </div>
+        <div class="home-path">
+          <div class="home-path-row" data-home-go="daily-today"><div class="home-path-num">1</div><div><div class="home-path-title">Open your current lesson</div><div class="home-path-desc">Study the objectives, use the timer, open resources, take notes, and mark the lesson learned.</div></div></div>
+          <div class="home-path-row" data-home-go="checklist"><div class="home-path-num">2</div><div><div class="home-path-title">Check off proof of understanding</div><div class="home-path-desc">Use the skill checklist so progress means “I can explain and use this,” not just “I watched it.”</div></div></div>
+          <div class="home-path-row" data-home-go="practice"><div class="home-path-num">3</div><div><div class="home-path-title">Build or practice immediately</div><div class="home-path-desc">Jump into the practice area and turn the lesson into code while the idea is still fresh.</div></div></div>
+        </div>
+      </div>
+
+      <div class="home-card">
+        <h2>Plan snapshot</h2>
+        <p>Target finish: <b style="color:var(--text)">${targetText}</b>. Rest days: <b style="color:var(--text)">${restDayLabel()}</b>.</p>
+        <div class="home-phase-list">${phaseRows}</div>
+      </div>
+    </div>
+
+    <div class="psec">
+      <div class="psec-hd"><h2>Proof-of-work snapshot</h2><p>Turns the learning plan into evidence: completed lessons, verified skills, project work, DSA practice, and focused study sessions.</p></div>
+      <div class="psec-bd">
+        <div class="home-proof-grid">
+          <div class="home-proof"><div class="home-proof-k">Curriculum proof</div><div class="home-proof-v cP2">${dc}/${LESSONS.length}</div><div class="home-proof-d">Lessons completed and marked learned.</div></div>
+          <div class="home-proof"><div class="home-proof-k">Skill proof</div><div class="home-proof-v cP4">${skillsDone}/${totalSkills}</div><div class="home-proof-d">Skills checked after you can explain or use them.</div></div>
+          <div class="home-proof"><div class="home-proof-k">Career proof</div><div class="home-proof-v cP6">${projectCount} projects · ${dsaCount} DSA</div><div class="home-proof-d">${focusCount} focus sessions logged. Use Tracker to build evidence for interviews.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-mini-grid">
+      <div class="home-mini" data-home-go="roadmap"><div class="home-mini-k">Big picture</div><div class="home-mini-t">See the full roadmap</div><div class="home-mini-d">Understand the order, project milestones, interview prep timing, and why each phase exists.</div></div>
+      <div class="home-mini" data-home-go="tracker"><div class="home-mini-k">Career proof</div><div class="home-mini-t">Track projects and reps</div><div class="home-mini-d">Log LeetCode, projects, system design, GitHub stars, and focus history so your work becomes evidence.</div></div>
+      <div class="home-mini" data-home-go="backup"><div class="home-mini-k">Safety</div><div class="home-mini-t">Protect your progress</div><div class="home-mini-d">Open schedule settings to export a backup and avoid losing browser-saved progress.</div></div>
+    </div>
+  `;
+  el.querySelectorAll('[data-home-go]').forEach(btn=>{
+    btn.onclick=()=>{
+      const dest=btn.dataset.homeGo;
+      if(dest==='daily-today'){navigateTo('daily');switchDailyTab('today');viewId=null;renderToday();}
+      else if(dest==='settings'){
+        if(typeof openScheduleSettingsModal==='function')openScheduleSettingsModal();
+      }
+      else if(dest==='backup'){
+        navigateTo('daily');
+        switchDailyTab('calendar');
+        renderCalendar();
+        setTimeout(()=>{
+          const target=document.getElementById('backup-tools')||document.querySelector('[data-backup-section]')||document.querySelector('.backup-tools');
+          if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+          else window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+        },80);
+      }
+      else if(dest==='checklist')navigateTo('checklist');
+      else if(dest==='practice')navigateTo('practice');
+      else if(dest==='roadmap')navigateTo('roadmap');
+      else if(dest==='tracker')navigateTo('tracker');
+    };
+  });
+  el.querySelectorAll('[data-home-phase]').forEach(row=>{
+    const openPhase=()=>{
+      const p=+row.dataset.homePhase;
+      curOpenPhase=p;
+      navigateTo('curriculum');
+      renderCurriculum();
+      setTimeout(()=>{const target=document.querySelector(`.cur-ph-hd[data-ph="${p}"]`);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});},60);
+    };
+    row.onclick=openPhase;
+    row.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPhase();}};
+  });
+}
+
 // ════════ DASHBOARD ════════
 function renderDash(){
   const sc=schedule();const streak=recomputeStreak();const dc=doneCount();
@@ -1806,7 +2904,22 @@ function renderDash(){
   if(skipCard){skipCard.style.display=skippedCount>0?'':'none';if(skipNum)skipNum.textContent=skippedCount;}
   const sbar=document.querySelector('.streakbar');if(sbar)sbar.classList.toggle('has-skip',skippedCount>0);
   if(skipCard&&skippedCount>0){skipCard.onclick=()=>{navigateTo('daily');setTimeout(()=>{switchDailyTab('calendar');renderCalendar();setTimeout(()=>{const skippedEls=document.querySelectorAll('.lesson.skipped');if(skippedEls.length)skippedEls[0].scrollIntoView({behavior:'smooth',block:'center'});},80);},50);};}
-  const fd=sc.finishDate;const fEl=document.getElementById('finish-num');const fLbl=document.getElementById('finish-lbl');  if(fd){const dLeft=Math.max(0,Math.ceil((fd-today0())/MS));fEl.textContent=fd.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'2-digit'})+(dLeft>0?' ('+dLeft+'d)':'');}else{fEl.textContent='\u2014';}
+  const fd=sc.finishDate;const fEl=document.getElementById('finish-num');const fLbl=document.getElementById('finish-lbl');
+  if(fd){
+    if(state.targetFinish){
+      const targetD=parseD(state.targetFinish);
+      const targetStudyDays=studyDaysUntil(targetD);
+      // Show the user's selected calendar target date exactly.
+      // The parenthesized number is the count of available study days from the selected start date,
+      // excluding selected rest days. Do not replace the visible date with the computed final study date.
+      fEl.textContent=targetD.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})+' ('+targetStudyDays+'d)';
+      fEl.title='Your selected target finish date. The number counts study days from your selected start date, excluding selected rest days.';
+    }else{
+      const dLeft=Math.max(0,Math.ceil((fd-today0())/MS));
+      fEl.textContent=fd.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})+(dLeft>0?' ('+dLeft+'d)':'');
+      fEl.title='Estimated finish date and calendar days remaining from today.';
+    }
+  }else{fEl.textContent='\u2014';fEl.title='';}
   if(fLbl)fLbl.textContent=state.targetFinish?'Target finish':'Est. finish';
   const card=fEl.closest('.sb-card');
   card.classList.toggle('targeted',!!state.targetFinish);
@@ -1832,7 +2945,7 @@ function renderDash(){
   const _phLessons=LESSONS.filter(x=>x.ph===l.ph);const _phDone=_phLessons.filter(x=>state.done[x.id]).length;
   if(metaEl)metaEl.innerHTML='<span class="c'+PHASE[l.ph].c+'">Phase '+l.ph+': '+PHASE[l.ph].n+'</span> · Lesson '+(idx+1)+' of '+LESSONS.length+' · '+DIFF_LABEL[l.diff]+' <span style="color:var(--muted)">· P'+l.ph+': '+_phDone+'/'+_phLessons.length+'</span>';
   if(today0()<parseD(state.start)){if(statusEl)statusEl.innerHTML='<span class="st-dot mild"></span> Plan starts '+fmtFull(parseD(state.start))+'.';return;}
-  if(today0().getDay()===state.restDow){if(statusEl)statusEl.innerHTML='<span class="st-dot" style="background:var(--muted)"></span> Rest day. Next lesson: '+l.n+'.';return;}
+  if(isRestDay(today0())){if(statusEl)statusEl.innerHTML='<span class="st-dot" style="background:var(--muted)"></span> Rest day. Next lesson: '+l.n+'.';return;}
   if(behind>0){if(statusEl)statusEl.innerHTML='<span class="st-dot behind"></span> Behind by '+behind+' day'+(behind>1?'s':'')+' — deadline was '+fmtD(s.endDate)+'. Open Schedule tab to push the deadline or catch up.';}
   else{const dl=s.endIdx-tIdx;if(statusEl)statusEl.innerHTML='<span class="st-dot"></span> On track — due '+fmtD(s.endDate)+(dl>0?' · '+dl+' day'+(dl>1?'s':'')+' remaining':' · due today')+'.';}
 }
@@ -3086,41 +4199,218 @@ function renderSysDesign(el){
   el.querySelectorAll('[data-sd]').forEach(c=>c.onclick=()=>{const k=c.dataset.sd;const cur=state.sysDesigns[k]||'new';const idx=SD_STATUS.findIndex(s=>s.k===cur);state.sysDesigns[k]=SD_STATUS[(idx+1)%SD_STATUS.length].k;save();renderSysDesign(el);});
 }
 
-// ════════ SEARCH OVERLAY ════════
+// ════════ COMMAND SEARCH ════════
 let searchOpen=false;
+let searchFilter='all';
+let searchActiveIndex=0;
+
+function normalizeText(v){return String(v||'').toLowerCase();}
+function searchTokens(q){return normalizeText(q).split(/\s+/).filter(Boolean);}
+function matchesTokens(hay,tokens){const h=normalizeText(hay);return tokens.every(t=>h.includes(t));}
+function scoreMatch(item,tokens){
+  const title=normalizeText(item.title), body=normalizeText(item.body), path=normalizeText(item.path);
+  let score=0;
+  tokens.forEach(t=>{
+    if(title===t)score+=60;
+    else if(title.startsWith(t))score+=42;
+    else if(title.includes(t))score+=30;
+    if(path.includes(t))score+=12;
+    if(body.includes(t))score+=8;
+  });
+  const kindBoost={action:8,page:7,lesson:6,skill:5,practice:4,resource:3};
+  return score+(kindBoost[item.kind]||0);
+}
+function highlight(text,q){
+  const safe=escHtml(text||'');
+  const tokens=[...new Set(searchTokens(q))].filter(t=>t.length>1).slice(0,5);
+  if(!tokens.length)return safe;
+  const re=new RegExp('('+tokens.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');
+  return safe.replace(re,'<mark>$1</mark>');
+}
+function searchDataset(){
+  const items=[];
+  const add=(item)=>items.push(item);
+
+  // High-value app destinations and actions
+  [
+    {title:'Home dashboard',body:'Start here for progress, today’s mission, plan snapshot, quick actions, search, and next steps.',page:'home'},
+    {title:'Today lesson',body:'Open the current lesson, timer, objectives, notes, resources, and mark learned button.',page:'daily',view:'today'},
+    {title:'Schedule calendar',body:'Search lessons, reorder, push deadlines, rest days, start date, target finish date, undo, skipped lessons.',page:'daily',view:'calendar'},
+    {title:'Roadmap',body:'View the full software engineering roadmap, phase timing, projects, interview prep, and sequence.',page:'roadmap'},
+    {title:'Curriculum',body:'Browse every lesson grouped by phase with objectives, resources, and practice.',page:'curriculum'},
+    {title:'Checklist',body:'Search and check off every individual skill across the plan.',page:'checklist'},
+    {title:'Practice playground',body:'Open JavaScript, Python, React, SQL, HTML, CSS playgrounds and lesson practice tasks.',page:'practice'},
+    {title:'Tracker',body:'Track projects, LeetCode, DSA, system design, stars, and focus history.',page:'tracker'},
+    {title:'Help and guide',body:'Keyboard shortcuts, schedule help, backup instructions, localStorage notes, and usage guide.',page:'help'}
+  ].forEach(p=>add({kind:'page',title:p.title,body:p.body,path:'Page',page:p.page,view:p.view}));
+
+  [
+    {title:'Change start date',body:'Open Schedule Settings to pick the first day of your plan.',action:'settings'},
+    {title:'Edit rest days',body:'Open Schedule Settings to select, deselect, or add multiple rest days.',action:'settings'},
+    {title:'Set target finish date',body:'Open Schedule Settings to choose a deadline and rescale lessons.',action:'settings'},
+    {title:'Export progress backup',body:'Go to Schedule Settings and export progress so browser data loss cannot wipe your work.',action:'settings'},
+    {title:'Open current lesson',body:'Jump to today’s lesson.',action:'today'}
+  ].forEach(a=>add({kind:'action',title:a.title,body:a.body,path:'Action',action:a.action}));
+
+  LESSONS.forEach(l=>{
+    const phase=PHASE[l.ph];
+    const basePath=`Phase ${l.ph} · ${phase.n}`;
+    add({
+      kind:'lesson',id:l.id,title:l.n,path:basePath,
+      body:[l.d,l.why,l.prac,(l.obj||[]).join(' '),(l.res||[]).map(r=>r.n).join(' ')].join(' '),
+      lessonName:l.n,phase:l.ph
+    });
+    (l.obj||[]).forEach((obj,i)=>add({
+      kind:'skill',id:l.id,objIndex:i,title:obj,path:`${basePath} · ${l.n}`,
+      body:`${l.n} ${l.d} ${l.why||''}`,lessonName:l.n,phase:l.ph
+    }));
+    if(l.prac)add({
+      kind:'practice',id:l.id,title:l.prac,path:`Practice · ${l.n}`,
+      body:`${l.n} ${l.d}`,lessonName:l.n,phase:l.ph
+    });
+    (l.res||[]).forEach(r=>add({
+      kind:'resource',id:l.id,title:r.n,path:`Resource · ${l.n}`,
+      body:`${l.n} ${l.d} ${r.f?'free':'paid'} ${r.u||''}`,url:r.u,lessonName:l.n,phase:l.ph
+    }));
+  });
+  return items;
+}
+function resultKindLabel(kind){
+  return {lesson:'Lesson',skill:'Skill',practice:'Practice',resource:'Resource',page:'Page',action:'Action'}[kind]||kind;
+}
+function searchInitialHTML(){
+  return `<div class="srch-empty">Search across lessons, skills, practice prompts, resources, pages, and schedule actions.<br>Try “React”, “SQL joins”, “rest day”, “export”, “fetch”, or “resume”.</div>`;
+}
+function renderSearchResults(){
+  const input=document.getElementById('srch-input');
+  const results=document.getElementById('srch-results');
+  if(!input||!results)return;
+  const q=input.value.trim();
+  const tokens=searchTokens(q);
+  if(!tokens.length){results.innerHTML=searchInitialHTML();searchActiveIndex=0;return;}
+
+  let found=searchDataset()
+    .filter(item=>searchFilter==='all'||item.kind===searchFilter)
+    .filter(item=>matchesTokens(`${item.title} ${item.body} ${item.path} ${item.kind}`,tokens))
+    .map(item=>({...item,score:scoreMatch(item,tokens)}))
+    .sort((a,b)=>b.score-a.score||a.title.localeCompare(b.title))
+    .slice(0,36);
+
+  if(!found.length){
+    results.innerHTML=`<div class="srch-empty">No results for “${escHtml(q)}”. Try a broader word like “React”, “database”, “rest”, or “project”.</div>`;
+    return;
+  }
+
+  const priority=['action','page','lesson','skill','practice','resource'];
+  const grouped=priority.map(kind=>[kind,found.filter(x=>x.kind===kind)]).filter(([,arr])=>arr.length);
+  let html='';
+  grouped.forEach(([kind,arr])=>{
+    html+=`<div class="srch-group-title">${resultKindLabel(kind)}${arr.length>1?'s':''}</div>`;
+    arr.forEach((item,idx)=>{
+      const activeClass=(html===''&&idx===0)?' active':'';
+      const meta=item.phase?`<span class="srch-r-ph c${PHASE[item.phase].c}">P${item.phase}</span>`:'';
+      const status=item.id&&state.done[item.id]?'<span class="srch-r-done">done</span>':(item.id&&item.id===currentLessonId()?'<span class="srch-r-cur">current</span>':'');
+      const subtitle=item.kind==='resource'&&item.url?item.url.replace(/^https?:\/\//,''):item.body;
+      html+=`<div class="srch-result${activeClass}" tabindex="0" role="button"
+        data-kind="${item.kind}" data-id="${item.id??''}" data-url="${item.url?escHtml(item.url):''}"
+        data-page="${item.page||''}" data-view="${item.view||''}" data-action="${item.action||''}">
+        <div class="srch-r-top"><span class="srch-r-n">${highlight(item.title,q)}</span>${meta}${status}<span class="srch-r-kind">${resultKindLabel(item.kind)}</span></div>
+        <div class="srch-r-obj">${highlight(String(subtitle||'').slice(0,180),q)}</div>
+        <div class="srch-r-path">${highlight(item.path||'',q)}</div>
+      </div>`;
+    });
+  });
+  results.innerHTML=html;
+  const first=results.querySelector('.srch-result');
+  if(first)first.classList.add('active');
+}
+function activateSearchResult(el){
+  if(!el)return;
+  const kind=el.dataset.kind;
+  const id=el.dataset.id?+el.dataset.id:null;
+  const page=el.dataset.page;
+  const view=el.dataset.view;
+  const action=el.dataset.action;
+  const url=el.dataset.url;
+
+  closeSearch();
+
+  if(kind==='resource'&&url){window.open(url,'_blank','noopener,noreferrer');return;}
+  if(action==='settings'){navigateTo('daily');switchDailyTab('calendar');renderCalendar();setTimeout(openScheduleSettingsModal,40);return;}
+  if(action==='today'){navigateTo('daily');switchDailyTab('today');viewId=null;renderToday();return;}
+  if(page){navigateTo(page);if(view){switchDailyTab(view);const fn={today:renderToday,calendar:renderCalendar,map:renderMap,progress:renderAch}[view];if(fn)fn();}return;}
+  if(id){
+    viewId=id;
+    navigateTo('daily');
+    switchDailyTab('today');
+    renderToday();
+    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),20);
+  }
+}
 function initSearch(){
-  const overlay=document.getElementById('search-overlay');const input=document.getElementById('srch-input');const results=document.getElementById('srch-results');
+  const overlay=document.getElementById('search-overlay');
+  const input=document.getElementById('srch-input');
+  const results=document.getElementById('srch-results');
+  const close=document.getElementById('srch-close');
+  const searchBtn=document.getElementById('search-btn');
+  if(!overlay||!input||!results)return;
+
   overlay.onclick=(e)=>{if(e.target===overlay)closeSearch();};
-  input.oninput=()=>{
-    const q=input.value.trim().toLowerCase();
-    if(!q){results.innerHTML=`<div class="srch-empty">Type to search ${LESSONS.length} lessons across all ${Object.keys(PHASE).length} phases.</div>`;return;}
-    const matches=LESSONS.filter(l=>l.n.toLowerCase().includes(q)||l.d.toLowerCase().includes(q)||l.obj.some(o=>o.toLowerCase().includes(q))||(l.why&&l.why.toLowerCase().includes(q))).slice(0,14);
-    if(!matches.length){results.innerHTML=`<div class="srch-empty">No lessons match \u201C${escHtml(q)}\u201D</div>`;return;}
-    let _out=matches.map(l=>{const meta=PHASE[l.ph];const done=state.done[l.id];const cur=l.id===currentLessonId();const matchObj=l.obj.find(o=>o.toLowerCase().includes(q));
-      return`<div class="srch-result" data-sid="${l.id}"><div class="srch-r-top"><span class="srch-r-n">${escHtml(l.n)}</span><span class="srch-r-ph c${meta.c}">P${l.ph}</span>${done?'<span class="srch-r-done">\u2713 done</span>':''}${cur?'<span class="srch-r-cur">today</span>':''}</div><div class="srch-r-obj">${escHtml(matchObj||l.d.substring(0,80))}</div></div>`;
-    }).join('');
-    if(q&&_out){
-      const _eq=q.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&');
-      // Only highlight in text nodes (between > and <), not inside HTML attributes
-      _out=_out.replace(new RegExp('(?<=>)([^<]*)('+_eq+')([^<]*)','gi'),
-        (m,pre,match,post)=>pre+'<mark style="background:rgba(232,179,57,.3);border-radius:2px;padding:0 1px">'+match+'</mark>'+post);
-    }
-    results.innerHTML=_out;
-    results.querySelectorAll('.srch-result').forEach(r=>r.onclick=()=>{const id=+r.dataset.sid;closeSearch();viewId=id;document.querySelectorAll('.pgbtn').forEach(b=>b.classList.toggle('active',b.dataset.page==='daily'));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-daily'));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view==='today'));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-today'));renderToday();window.scrollTo({top:0,behavior:'smooth'});});
+  if(close)close.onclick=closeSearch;
+  if(searchBtn)searchBtn.onclick=openSearch;
+
+  input.oninput=renderSearchResults;
+  input.onkeydown=(e)=>{
+    const rows=[...results.querySelectorAll('.srch-result')];
+    if(e.key==='Enter'){e.preventDefault();activateSearchResult(rows[searchActiveIndex]||rows[0]);}
+    else if(e.key==='ArrowDown'&&rows.length){e.preventDefault();rows[searchActiveIndex]?.classList.remove('active');searchActiveIndex=(searchActiveIndex+1)%rows.length;rows[searchActiveIndex].classList.add('active');rows[searchActiveIndex].scrollIntoView({block:'nearest'});}
+    else if(e.key==='ArrowUp'&&rows.length){e.preventDefault();rows[searchActiveIndex]?.classList.remove('active');searchActiveIndex=(searchActiveIndex-1+rows.length)%rows.length;rows[searchActiveIndex].classList.add('active');rows[searchActiveIndex].scrollIntoView({block:'nearest'});}
   };
+  results.onclick=(e)=>{const row=e.target.closest('.srch-result');if(row)activateSearchResult(row);};
+  results.onmouseover=(e)=>{const row=e.target.closest('.srch-result');if(!row)return;const rows=[...results.querySelectorAll('.srch-result')];rows.forEach(r=>r.classList.remove('active'));searchActiveIndex=Math.max(0,rows.indexOf(row));row.classList.add('active');};
+
+  document.querySelectorAll('[data-sfilter]').forEach(btn=>{
+    btn.onclick=()=>{
+      searchFilter=btn.dataset.sfilter||'all';
+      document.querySelectorAll('[data-sfilter]').forEach(b=>b.classList.toggle('on',b.dataset.sfilter===searchFilter));
+      searchActiveIndex=0;
+      renderSearchResults();
+      input.focus();
+    };
+  });
+
   document.addEventListener('keydown',(e)=>{
     const tag=(document.activeElement?.tagName||'');
-    if(_inputFocused||['INPUT','TEXTAREA'].includes(tag)){if(e.key==='Escape'){if(searchOpen)closeSearch();else if(document.getElementById('modal-bg').classList.contains('show'))closeModal();}return;}
+    if(_inputFocused||['INPUT','TEXTAREA','SELECT'].includes(tag)){
+      if(e.key==='Escape'){
+        if(searchOpen)closeSearch();
+        else if(document.getElementById('modal-bg').classList.contains('show'))closeModal();
+      }
+      return;
+    }
     if(e.key==='/'&&!e.ctrlKey&&!e.metaKey){e.preventDefault();openSearch();}
     else if(e.key==='Escape'&&searchOpen){closeSearch();}
     else if(e.key==='Escape'&&document.getElementById('modal-bg').classList.contains('show')){closeModal();}
   });
 }
-function openSearch(){searchOpen=true;document.getElementById('search-overlay').classList.add('open');const i=document.getElementById('srch-input');i.value='';document.getElementById('srch-results').innerHTML=`<div class="srch-empty">Type to search ${LESSONS.length} lessons across all ${Object.keys(PHASE).length} phases.</div>`;setTimeout(()=>i.focus(),40);}
-function closeSearch(){searchOpen=false;document.getElementById('search-overlay').classList.remove('open');}
+function openSearch(){
+  searchOpen=true;
+  searchActiveIndex=0;
+  document.getElementById('search-overlay').classList.add('open');
+  const i=document.getElementById('srch-input');
+  i.value='';
+  searchFilter='all';
+  document.querySelectorAll('[data-sfilter]').forEach(b=>b.classList.toggle('on',b.dataset.sfilter==='all'));
+  document.getElementById('srch-results').innerHTML=searchInitialHTML();
+  setTimeout(()=>i.focus(),40);
+}
+function closeSearch(){
+  searchOpen=false;
+  document.getElementById('search-overlay').classList.remove('open');
+}
 
 // ════════ KEYBOARD SHORTCUTS ════════
-const KB_PAGES=['daily','roadmap','curriculum','checklist','practice','tracker','help'];
+const KB_PAGES=['home','daily','roadmap','curriculum','checklist','practice','tracker','help'];
 // _inputFocused stays true for 300ms after an input loses focus, so the native
 // date-picker popup (which briefly steals focus from the <input>) can't trigger
 // page-navigation shortcuts while the user is picking a date.
@@ -3206,17 +4496,17 @@ const HELP_SECTIONS=[
   <div class="wf-step"><div class="wf-num">3</div><div class="wf-body"><div class="wf-title">Run the Session Plan</div><div class="wf-desc">Scroll down to the <b>Session Plan</b> box. Start the Pomodoro timer, open the resource link, and work through each learning objective — checking each one off as it clicks.</div></div></div>
   <div class="wf-step"><div class="wf-num">4</div><div class="wf-body"><div class="wf-title">Do the practice task</div><div class="wf-desc">The <b>Practice</b> box shows exactly what to build and links to where to do it. This is the most important part — do not skip it.</div></div></div>
   <div class="wf-step"><div class="wf-num">5</div><div class="wf-body"><div class="wf-title">Mark the lesson done</div><div class="wf-desc">When the <b>Definition of Done</b> checklist is satisfied, click <b>Mark learned</b> at the bottom. The next lesson loads automatically tomorrow.</div></div></div>
-  <div class="wf-step"><div class="wf-num">6</div><div class="wf-body"><div class="wf-title">Build the habit</div><div class="wf-desc">Come back every day (except your one rest day). The streak counter tracks consecutive study days. Consistency over intensity — 30 minutes every day beats 5 hours once a week.</div></div></div>
+  <div class="wf-step"><div class="wf-num">6</div><div class="wf-body"><div class="wf-title">Build the habit</div><div class="wf-desc">Come back on each scheduled study day. Selected rest days do not break your streak. Consistency over intensity — 30 minutes every day beats 5 hours once a week.</div></div></div>
 </div>
 <div class="help-tip"><b>Keyboard shortcuts:</b> press <code>/</code> to search lessons, <code>1–9</code> to jump to any page, <code>?</code> for this help page.</div>
 `},
-{id:'daily',icon:'',title:'Daily page',sub:'Your main working page — open this every study day.',body:`
+{id:'daily',icon:'',title:'Daily page',sub:'Your main working page — open this everyday.',body:`
 <h4>Today Brief (top of page)</h4>
 <p>The card at the top shows your current lesson, phase, time estimate, and schedule status. <b>Click it at any time to jump straight to the Today tab</b> — useful when you're on the Schedule or Map tab and want to get back to studying.</p>
 <h4>Streak Bar (4 metrics)</h4>
 <ul>
-  <li><b>Day streak:</b> consecutive study days. Turns gold when active. Breaks if you miss a non-rest day.</li>
-  <li><b>Lessons done:</b> out of 66 total.</li>
+  <li><b>Day streak:</b> consecutive scheduled study days. Turns gold when active. Selected rest days do not break it.</li>
+  <li><b>Lessons done:</b> out of the full lesson list.</li>
   <li><b>Complete %:</b> overall progress through the plan.</li>
   <li><b>Est. finish:</b> projected finish date. Turns gold if you're tracking late.</li>
 </ul>
@@ -3233,7 +4523,7 @@ const HELP_SECTIONS=[
   <li>Use <b>Notes</b> to record what clicked and what's still fuzzy. Auto-saved, word count shown.</li>
 </ol>
 <h4>Schedule sub-tab</h4>
-<p>The full lesson calendar with drag-like reordering, day adjustments, and settings. If you're behind or have overdue lessons, a <b>schedule health banner</b> appears at the top with one-click recovery actions: push the deadline, catch up to today, skip the current lesson, or undo. Red-bordered lessons in the list are overdue — expand them to take action. Settings at the bottom control start date, rest day, and backup.</p>
+<p>The full lesson calendar with drag-like reordering, day adjustments, and settings. If you're behind or have overdue lessons, a <b>schedule health banner</b> appears at the top with one-click recovery actions: push the deadline, catch up to today, skip the current lesson, or undo. Red-bordered lessons in the list are overdue — expand them to take action. Settings control start date, rest days, target finish, and backup.</p>
 <h4>Map sub-tab</h4>
 <p>Visual overview of all 7 phases with progress bars. Below the phase bars, <b>Phase checkpoints</b> show what you should be able to do before advancing to the next phase. When a phase is 100% complete, its checkpoint card turns green.</p>
 <h4>Progress sub-tab</h4>
@@ -3263,7 +4553,7 @@ const HELP_SECTIONS=[
 <ul>
   <li><b>Start date:</b> in the Schedule Settings popup. Changing it shifts all lesson dates forward or back.</li>
   <li><b>Target finish date:</b> in the Schedule Settings popup. Set a specific end date and every remaining lesson rescales automatically so the plan lands on that day. Earlier = compressed. Later = more breathing room. The Est. finish card turns blue when a target is active. Clear anytime to restore the natural schedule.</li>
-  <li><b>Rest day:</b> in the Schedule Settings popup. One day per week with no lesson scheduled.</li>
+  <li><b>Rest days:</b> in the Schedule Settings popup. Toggle none, one, or multiple days per week with no lessons scheduled.</li>
   <li><b>Export / Import progress:</b> in the Backup section at the bottom of the Schedule tab. Export weekly — clearing browser data will wipe your progress.</li>
   <li><b>Reset schedule:</b> also in the Backup section.</li>
 </ul>
@@ -3281,7 +4571,7 @@ const HELP_SECTIONS=[
 <h4>Interview timing</h4>
 <p>Tech hiring peaks January–April. Finishing the plan in late November/December puts you in the strongest position. The hiring calendar in the Roadmap shows which months are hot vs slow.</p>
 `},
-{id:'curriculum',icon:'',title:'Curriculum',sub:'Full syllabus — all 66 lessons grouped by phase.',body:`
+{id:'curriculum',icon:'',title:'Curriculum',sub:'Full syllabus — all lessons grouped by phase.',body:`
 <h4>How to use it</h4>
 <p>The Curriculum page is your reference for what's in the plan. Click any phase header to expand it and see all lessons in that phase. Each lesson shows:</p>
 <ul>
@@ -3300,7 +4590,7 @@ const HELP_SECTIONS=[
 <h4>How to use it</h4>
 <p>Use the Checklist page to: (1) get a granular view of exactly which skills you have vs haven't covered, (2) do a quick review pass before an interview, or (3) identify gaps when you're stuck and want to trace it back to a prerequisite skill.</p>
 <h4>Progress bars</h4>
-<p>The overall bar at the top shows total skill completion across all 458 skills. Each phase section has its own count. Each lesson row shows X/Y skills checked off.</p>
+<p>The overall bar at the top shows total skill completion across all skills. Each phase section has its own count. Each lesson row shows X/Y skills checked off.</p>
 <div class="help-warn help-tip"><b>Check things honestly.</b> A skill is checked when you can explain it or use it without notes — not just when you've read about it.</div>
 `},
 {id:'practice',icon:'',title:'Practice page',sub:'Code directly in the browser or open matched practice tools for every lesson.',body:`
@@ -3320,7 +4610,7 @@ const HELP_SECTIONS=[
 <h4>Practice Links tab — external tools</h4>
 <ul>
   <li>Today's lesson is pinned at the top with the full practice task and a direct link.</li>
-  <li>All 66 lessons are listed below, grouped by phase. Done lessons show a checkmark, skipped lessons are dimmed.</li>
+  <li>All lessons are listed below, grouped by phase. Done lessons show a checkmark, skipped lessons are dimmed.</li>
   <li>Click any row to open that lesson's matched practice tool in a new tab.</li>
 </ul>
 <div class="help-tip"><b>When to use which:</b> use the Playground for quick experiments — testing syntax, verifying a concept, trying something small. Use Practice Links for structured exercises: LeetCode problems, Exercism challenges, interactive coding sandboxes.</div>
@@ -3359,15 +4649,16 @@ const HELP_SECTIONS=[
   <tr><td><span class="kb-key">?</span></td><td class="kb-desc">Open this Help page from anywhere</td></tr>
   <tr><td><span class="kb-key">Esc</span></td><td class="kb-desc">Close search overlay or modal</td></tr>
 </tbody></table>
-<h4>Page navigation (keys 1–7)</h4>
+<h4>Page navigation (keys 1–8)</h4>
 <table class="kb-table"><thead><tr><th>Key</th><th>Page</th></tr></thead><tbody>
-  <tr><td><span class="kb-key">1</span></td><td class="kb-desc">Daily — today's lesson, schedule, map, progress</td></tr>
-  <tr><td><span class="kb-key">2</span></td><td class="kb-desc">Roadmap — phases, projects, interview process</td></tr>
-  <tr><td><span class="kb-key">3</span></td><td class="kb-desc">Curriculum — all 66 lessons grouped by phase</td></tr>
-  <tr><td><span class="kb-key">4</span></td><td class="kb-desc">Checklist — 458 skills as checkboxes</td></tr>
-  <tr><td><span class="kb-key">5</span></td><td class="kb-desc">Practice — in-browser playground + practice links</td></tr>
-  <tr><td><span class="kb-key">6</span></td><td class="kb-desc">Tracker — projects, DSA log, interview prep</td></tr>
-  <tr><td><span class="kb-key">7</span> or <span class="kb-key">?</span></td><td class="kb-desc">Help (this page)</td></tr>
+  <tr><td><span class="kb-key">1</span></td><td class="kb-desc">Home — launchpad, progress snapshot, and quick routes</td></tr>
+  <tr><td><span class="kb-key">2</span></td><td class="kb-desc">Daily — today's lesson, schedule, map, progress</td></tr>
+  <tr><td><span class="kb-key">3</span></td><td class="kb-desc">Roadmap — phases, projects, interview process</td></tr>
+  <tr><td><span class="kb-key">4</span></td><td class="kb-desc">Curriculum — all lessons grouped by phase</td></tr>
+  <tr><td><span class="kb-key">5</span></td><td class="kb-desc">Checklist — skills as checkboxes</td></tr>
+  <tr><td><span class="kb-key">6</span></td><td class="kb-desc">Practice — in-browser playground + practice links</td></tr>
+  <tr><td><span class="kb-key">7</span></td><td class="kb-desc">Tracker — projects, DSA log, interview prep</td></tr>
+  <tr><td><span class="kb-key">8</span> or <span class="kb-key">?</span></td><td class="kb-desc">Help — this guide</td></tr>
 </tbody></table>
 <h4>Daily page shortcuts</h4>
 <table class="kb-table"><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody>
@@ -3385,7 +4676,7 @@ const HELP_SECTIONS=[
 </tbody></table>
 <h4>Tips</h4>
 <ul>
-  <li><b>Click the Est. finish card</b> in the streak bar to open the Schedule Settings popup — change start date, rest day, or target finish date without leaving the page.</li>
+  <li><b>Click the Est. finish card</b> in the streak bar to open the Schedule Settings popup — change start date, rest days, or target finish date without leaving the page.</li>
   <li><b>Skipped lessons</b> show as an orange card in the streak bar when any exist. Click it to jump to the Calendar and see them highlighted — useful for reviewing what you've set aside.</li>
   <li><b>Click the Today Brief card</b> at the top of the Daily page to jump straight to today's lesson from any sub-tab.</li>
   <li><b>Checklist and Daily are synced.</b> Checking an objective in either page updates the other — you never need to tick things in two places.</li>
@@ -3507,7 +4798,7 @@ function runDiagnostics(){
   const ids=[...document.querySelectorAll('[id]')].map(el=>el.id);
   const dupes=ids.filter((id,i)=>ids.indexOf(id)!==i);
   out.push({name:'duplicate DOM ids',ok:dupes.length===0,detail:dupes});
-  const requiredPages=['daily','roadmap','curriculum','checklist','practice','tracker','help'];
+  const requiredPages=['home','daily','roadmap','curriculum','checklist','practice','tracker','help'];
   out.push({name:'required pages exist',ok:requiredPages.every(p=>document.getElementById('page-'+p)),detail:requiredPages.filter(p=>!document.getElementById('page-'+p))});
   const missingPrereqs=[];LESSONS.forEach(l=>(l.pre||[]).forEach(pid=>{if(!L_BY_ID[pid])missingPrereqs.push(`${l.id}->${pid}`);}));
   out.push({name:'lesson prerequisites resolve',ok:missingPrereqs.length===0,detail:missingPrereqs});
@@ -3524,7 +4815,7 @@ function runDiagnostics(){
 window.SWE_DEV={runDiagnostics,exportProgress,importProgress,getState:()=>cloneData(state),getLessons:()=>cloneData(LESSONS),version:APP_VERSION,clearCorruptBackups:()=>{Object.keys(localStorage).filter(k=>k.startsWith(KEY+'_corrupt_')).forEach(k=>localStorage.removeItem(k));return true;}};
 
 // ════════ WIRE ════════
-function renderAll(){renderDash();renderToday();renderCalendar();renderMap();renderAch();renderRoadmap();renderCurriculum();renderChecklist();renderPractice();renderTracker();renderHelp();}
+function renderAll(){renderHome();renderDash();renderToday();renderCalendar();renderMap();renderAch();renderRoadmap();renderCurriculum();renderChecklist();renderPractice();renderTracker();renderHelp();}
 // ════════ DAILY TAB HELPER ════════
 // Switches to a named sub-tab within the Daily page (today/calendar/map/progress).
 // Extracted to avoid repeating the 4-line querySelectorAll dance in 3+ places.
@@ -3544,16 +4835,17 @@ function switchDailyTab(viewName){
 function navigateTo(pg){
   if(document.getElementById('page-practice').classList.contains('active')&&pg!=='practice')_pgInited=false;
   if(pg!=='daily')calSearch='';
-  const _pageTitles={daily:'Daily',roadmap:'Roadmap',curriculum:'Curriculum',checklist:'Checklist',practice:'Practice',tracker:'Tracker',help:'Help & Reference'};
+  const _pageTitles={home:'Home',daily:'Daily',roadmap:'Roadmap',curriculum:'Curriculum',checklist:'Checklist',practice:'Practice',tracker:'Tracker',help:'Help & Reference'};
   document.title=(_pageTitles[pg]||pg)+' — CodePathway';
-  document.querySelectorAll('.pgbtn').forEach(b=>{const on=b.dataset.page===pg;b.classList.toggle('active',on);if(b.dataset.page)b.setAttribute('aria-pressed',on?'true':'false');});
+  document.querySelectorAll('.pgbtn,.brand-btn').forEach(b=>{const on=b.dataset.page===pg;b.classList.toggle('active',on);if(b.dataset.page)b.setAttribute('aria-pressed',on?'true':'false');});
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+pg));
   window.scrollTo({top:0,behavior:'smooth'});
-  const refresh={daily:renderDash,roadmap:renderRoadmap,curriculum:renderCurriculum,checklist:renderChecklist,practice:renderPractice,tracker:renderTracker,help:renderHelp};
+  const refresh={home:renderHome,daily:()=>{renderDash();renderToday();},roadmap:renderRoadmap,curriculum:renderCurriculum,checklist:renderChecklist,practice:renderPractice,tracker:renderTracker,help:renderHelp};
   if(refresh[pg])refresh[pg]();
 }
 // top page nav
 document.querySelectorAll('.pgbtn').forEach(btn=>{if(btn.id==='theme-toggle')return;btn.onclick=()=>navigateTo(btn.dataset.page);});
+const brandHome=document.getElementById('brand-home');if(brandHome)brandHome.onclick=()=>navigateTo('home');
 // daily sub-tabs
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
@@ -3577,7 +4869,7 @@ document.getElementById('today-brief').onclick=()=>{
 };
 document.getElementById('reset').onclick=()=>{if(confirm('Reset ALL progress, streak, notes and schedule changes? Consider exporting a backup first (Daily → Calendar → settings). This cannot be undone.')){localStorage.removeItem(KEY);location.reload();}};
 // Init dynamic search placeholder with correct lesson count
-(function(){const el=document.getElementById('srch-empty-init');if(el)el.textContent=`Type to search ${LESSONS.length} lessons across all ${Object.keys(PHASE).length} phases.`;})();
+(function(){const el=document.getElementById('srch-empty-init');if(el)el.textContent=`Type to search ${LESSONS.length} lessons, ${LESSONS.reduce((a,l)=>a+l.obj.length,0)} skills, practice tasks, resources, and pages.`;})();
 
 renderAll();
 // Compute footer stats dynamically so they stay accurate if lessons change
@@ -3585,8 +4877,9 @@ renderAll();
   const totalSkills=LESSONS.reduce((a,l)=>a+l.obj.length,0);
   const totalDays=LESSONS.reduce((a,l)=>a+l.days,0);
   const totalWeeks=Math.round(totalDays*7/6/7); // 6-day study weeks
+  const pageCount=document.querySelectorAll('.page').length;
   const el=document.getElementById('app-footer');
-  if(el)el.firstChild.textContent=`CodePathway Final Complete · 7 pages · ${LESSONS.length} lessons · ${totalSkills} skills · ~${totalWeeks} weeks`;
+  if(el)el.firstChild.textContent=`CodePathway Final Complete · ${pageCount} pages · ${LESSONS.length} lessons · ${totalSkills} skills · ~${totalWeeks} weeks`;
 })();
 _restoreTimer();
 initTheme();
