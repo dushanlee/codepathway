@@ -60,12 +60,14 @@ Through building this project, I strengthened my understanding of:
 Potential future additions include:
 
 * Flashcard system
-* Search functionality
+~~* Homepage~~
+~~* Search functionality~~
 * Expandable learning sections
 * Improved progress tracking
 * Interactive quizzes
 * Backend integration
 * User accounts and saved progress
+* ML and AI Learning
 
 ## Development Process
 
