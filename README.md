@@ -67,9 +67,17 @@ Potential future additions include:
 * Backend integration
 * User accounts and saved progress
 
+## Development Process
+
+This project was developed with the assistance of AI tools including ChatGPT and Claude. These tools were used to help brainstorm ideas, refine UI/UX decisions, improve code structure, debug issues, and accelerate development workflow iteration.
+
+The overall project direction, organization, customization, design decisions, and final implementation were personally guided, reviewed, and integrated by me throughout the development process.
+
+I believe modern software engineering increasingly involves effectively leveraging AI assisted development tools alongside strong problem solving, architecture, and engineering fundamentals.
+
 ## Live Website
 
-[Add your GitHub Pages link here after deployment]
+https://dushanlee.github.io/codepathway/
 
 ## Author
 
