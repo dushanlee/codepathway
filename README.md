@@ -63,6 +63,8 @@ Potential future additions include:
 ~~* Homepage~~
 ~~* Search functionality~~
 * Expandable learning sections
+* “Weak skills” dashboard based on unchecked items
+• Daily streak calendar heatmap
 * Improved progress tracking
 * Interactive quizzes
 * Backend integration
