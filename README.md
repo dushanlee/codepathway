@@ -60,8 +60,8 @@ Through building this project, I strengthened my understanding of:
 Potential future additions include:
 
 * Flashcard system
-~~* Homepage~~
-~~* Search functionality~~
+* ~~Homepage~~
+* ~~Search functionality~~
 * Expandable learning sections
 * “Weak skills” dashboard based on unchecked items
 • Daily streak calendar heatmap
